@@ -62,21 +62,6 @@ func matchLine(line []byte, pattern string) (bool, error) {
 	return false, nil
 }
 
-func parseGroup(pat []rune, startIdx int, endIdx int, openDelim rune, closeDelim rune) (string, int, error) {
-	var t []rune
-	currIdx := startIdx
-	for currIdx <= endIdx {
-		char := pat[currIdx]
-		t = append(t, char)
-		if char == closeDelim {
-			return string(t), currIdx + 1, nil
-		}
-		currIdx++
-	}
-	return "", startIdx, fmt.Errorf("unmatched '%c' in pattern", openDelim)
-}
-
-// TODO: lacks pattern validation
 func tokenizer(pattern string) ([]string, error) {
 	var tokens []string
 
@@ -255,4 +240,18 @@ func isDigit(r rune) bool {
 func isWordCharacters(r rune) bool {
 	return (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') ||
 		(r >= '0' && r <= '9') || (r == '_')
+}
+
+func parseGroup(pat []rune, startIdx int, endIdx int, openDelim rune, closeDelim rune) (string, int, error) {
+	var t []rune
+	currIdx := startIdx
+	for currIdx <= endIdx {
+		char := pat[currIdx]
+		t = append(t, char)
+		if char == closeDelim {
+			return string(t), currIdx + 1, nil
+		}
+		currIdx++
+	}
+	return "", startIdx, fmt.Errorf("unmatched '%c' in pattern", openDelim)
 }
